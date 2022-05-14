@@ -1,36 +1,29 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Modal from './Modal';
-import CloseIcon from '../icons/closeIcon';
-import Firebase from '../../config/firebase';
+import CloseIcon from '../icons/CloseIcon';
 import { useNavigate } from 'react-router-dom';
-import ErrorMessage from '../ErrorMessage';
-
-//initializing Firebase Auth
-const auth = Firebase.auth();
-
+import { auth, logInWithEmailAndPassword} from "../../config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import LoadingIcon from '../icons/LoadingIcon';
 
 export default function SignInModal({isOpen, close}) {
   //States
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [disabled, setDisabled] = React.useState(false);
-  const [loginError, setLoginError] = React.useState('');
-  let navigate = useNavigate();
+  const [load, setLoad] = React.useState(false);
+  const [user, loading, error] = useAuthState(auth);
+  const navigate = useNavigate();
 
-  //Function to authenticate user using Firebase Auth when you submit the form (bugs)
-  const onSubmit = async() => {
-    try {
-      setDisabled(true);
-      if (email !== '' && password !== '') {
-        await auth.signInWithEmailAndPassword(email, password);
-      }
-    } catch (error) {
-      setLoginError(error.message);
-    } finally {
-      setDisabled(false);
-      navigate('admin');
+  //function that works on rendering, if authentication takes long to load, loading icon appears spinning on button
+  //once user is authenticated it navigates to admin page
+  useEffect(() => {
+    if (loading) {
+      setLoad(true);
+      return;
     }
-  }
+    if (user) navigate("/admin");
+  }, [user, loading, navigate]);
+
 
   return (
     <Modal
@@ -47,7 +40,7 @@ export default function SignInModal({isOpen, close}) {
         </button>
         <div className="flex w-full h-full justify-center items-center flex-col">
           <img alt="logo" className="w-20 mt-10" src="logo.svg" />
-          <form className="" onSubmit={onSubmit}>
+          <form className="">
             <label className="block mt-8 font-display md:text-base text-xs text-start">
               <span>Correo Electrónico</span>
               <input
@@ -75,13 +68,12 @@ export default function SignInModal({isOpen, close}) {
               />
             </label>
             <div className="w-full items-center flex flex-col flex-wrap">
-            {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
               <button
                 className="bg-black rounded-md shadow-xl py-2 w-full mt-10 mb-20 h-10 drop-shadow-3xl text-white font-display md:text-md hover:bg-red-500 text-xs"
-                type="submit"
-                disabled={disabled}
+                type="button"
+                onClick={() => logInWithEmailAndPassword(email, password)}
               >
-                INICIAR SESIÓN
+                {load ? (<LoadingIcon className="w-7 animate-spin text-red-500" />):(<p>INICIAR SESIÓN</p>)}
               </button>
             </div>
           </form>

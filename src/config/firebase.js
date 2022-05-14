@@ -1,6 +1,6 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getFirestore } from "firebase/firestore";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -12,10 +12,29 @@ const firebaseConfig = {
   appId: "1:247869032312:web:01573f88eb490e69512a8d"
 };
 
-let Firebase;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-if (firebase.apps.length === 0) {
-  Firebase = firebase.initializeApp(firebaseConfig);
-}
+//authentication function to login
+const logInWithEmailAndPassword = async (email, password) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
 
-export default Firebase;
+//logout function
+const logout = () => {
+  signOut(auth);
+};
+
+
+export {
+  auth,
+  db,
+  logInWithEmailAndPassword,
+  logout,
+};
