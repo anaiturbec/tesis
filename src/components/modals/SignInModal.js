@@ -69,11 +69,11 @@ export default function SignInModal({isOpen, close}) {
             </label>
             <div className="w-full items-center flex flex-col flex-wrap">
               <button
-                className="bg-black rounded-md shadow-xl py-2 w-full mt-10 mb-20 h-10 drop-shadow-3xl text-white font-display md:text-md hover:bg-red-500 text-xs"
+                className="bg-black rounded-md shadow-xl py-2 w-full mt-10 mb-20 h-10 drop-shadow-3xl font-display md:text-md hover:bg-red-500 items-center justify-center"
                 type="button"
                 onClick={() => logInWithEmailAndPassword(email, password)}
               >
-                {load ? (<LoadingIcon className="w-7 animate-spin text-red-500" />):(<p>INICIAR SESIÓN</p>)}
+                {load ? (<p className="text-white font-display text-xs">INICIAR SESIÓN</p>):(<LoadingIcon className="w-7 animate-spin text-white" />)}
               </button>
             </div>
           </form>
