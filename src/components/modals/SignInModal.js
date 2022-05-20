@@ -2,7 +2,8 @@ import React, {useEffect} from 'react';
 import Modal from './Modal';
 import CloseIcon from '../icons/CloseIcon';
 import { useNavigate } from 'react-router-dom';
-import { auth, logInWithEmailAndPassword} from "../../config/firebase";
+import { auth, logInWithEmailAndPassword, db} from "../../config/firebase";
+import { query, collection, getDocs, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingIcon from '../icons/LoadingIcon';
 
@@ -21,9 +22,25 @@ export default function SignInModal({isOpen, close}) {
       setLoad(true);
       return;
     }
-    if (user) navigate("/admin");
-  }, [user, loading, navigate]);
+    const fetchType  = async() => {
+      try {
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const doc = await getDocs(q);
+      const data = doc.docs[0].data();
+      if(data.userType === "admin"){
+        navigate("/dashboard");
+      } else {
+        navigate("/employee");
+      }
+      } catch (err) {
+        console.log(err);
+      }
+    } 
+    if (user){ 
+      fetchType();
+    }
 
+  }, [user, loading, navigate]);
 
   return (
     <Modal

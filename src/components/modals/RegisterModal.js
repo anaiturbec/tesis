@@ -10,6 +10,18 @@ function RegisterModal({isOpen, close}) {
   const [job, setJob] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [dni, setDni] = React.useState('');
+  const active = true;
+ 
+  const click = async() => {
+    try {
+      await registerWithEmailAndPassword(name, email, password, job, lastName, dni, active);
+    } catch(err) {
+      alert(err.message)
+    } finally {
+      window.location.reload(true);
+    }
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -112,7 +124,9 @@ function RegisterModal({isOpen, close}) {
               <button
                 className="bg-black text-white rounded-md shadow-xl py-2 w-full mt-10 mb-20 h-10 drop-shadow-3xl font-display md:text-md hover:bg-red-500 items-center justify-center"
                 type="button"
-                onClick={() => registerWithEmailAndPassword(name, email, password, job, lastName, dni)}
+                onClick={() => {
+                  click()
+                }}
               >
                 Registrar
               </button>

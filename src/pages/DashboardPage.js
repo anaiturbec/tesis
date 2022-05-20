@@ -5,18 +5,17 @@ import { auth, db, logout } from "../config/firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import LogoutIcon from "../components/icons/LogoutIcon";
 import RegisterModal from "../components/modals/RegisterModal";
-import userCard from "../components/cards/userCard";
+import DataTable from "../components/DataTable";
 
-function Admin() {
+function Dashboard() {
   const [openModal, setOpenModal] = React.useState(false);
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = React.useState("");
-  const [userData, setUserData] = React.useState([]);
   const navigate = useNavigate();
 
+  //gets current user on load
   useEffect(() => {
     if (loading) return;
-    if (!user) return navigate("/");
     const fetchUserName = async () => {
       try {
         const q = query(collection(db, "users"), where("uid", "==", user?.uid));
@@ -25,53 +24,42 @@ function Admin() {
         setName(data.name);
       } catch (err) {
         console.error(err);
-        alert("An error occurred while fetching user data");
       }
     };
     fetchUserName();
-    getUsers();
-  }, []);
+  }, [loading, navigate, user]);
 
-  //function to save all user info into a list that can be mapped
-  const getUsers = async() =>{
-    const userData = []
-    db.collection('users').get().then((querySnapshot)=>{
-      querySnapshot.forEach((doc)=>{
-        userData.push({
-          name: doc.data().name,
-          lastName: doc.data().lastName,
-          job: doc.data().job,
-          dni: doc.data().dni,
-          email: doc.data().email,
-        })
-      })
-      setUserData(userData);
-      console.log(userData);
-    })
+  const signOut = async() => {
+    try{
+      logout()
+    }catch(err) {
+      console.log(err.message)
+    } finally {
+      if(!user){
+        navigate("/")
+      }
+    }
   }
 
   return (
     <div className="w-full h-screen">
-       <div className="w-full h-24 flex flex-row justify-between items-center bg-white drop-shadow-3xl">
-          <div className="flex flex-row ml-20">
+      <div className="w-full h-24 flex flex-row justify-center items-center bg-white drop-shadow-3xl">
+        <div className="w-11/12 h-24 flex flex-row justify-between items-center">
+          <div className="flex flex-row">
             <p className="text-2xl text-black">Bienvenid@, </p>
             <div className="font-bold text-3xl text-red-500 ml-4">{name}</div>
           </div>
-          <div className="flex flex-row gap-x-10 mr-20">
+          <div className="flex flex-row gap-x-10">
             <button className="w-40 h-14 bg-red-500 text-white rounded-2xl drop-shadow-3xl hover:bg-white hover:text-red-500" onClick={()=> setOpenModal(true)}>Crear Empleado</button>
-            <button className="w-40 h-14 bg-white drop-shadow-3xl rounded-2xl flex flex-row items-center justify-center font-semibold hover:text-white hover:bg-red-500 text-red-500" onClick={logout}>
+            <button className="w-40 h-14 bg-white drop-shadow-3xl rounded-2xl flex flex-row items-center justify-center font-semibold hover:text-red-500 text-black" onClick={signOut}>
               <LogoutIcon className="w-7 mr-2" />
               <p>Cerrar Sesión</p>
             </button>
           </div>
-       </div>
-       <div>
-         {
-           userData.map((data) => (
-            <userCard name={data.name} lastName={data.lastName} job={data.job} dni={data.dni} email={data.email} />
-           ))
-         }
-       </div>
+        </div>
+      </div>
+        <DataTable />
+        
        <RegisterModal
         isOpen={openModal}
         close={() => {
@@ -81,4 +69,5 @@ function Admin() {
      </div>
   );
 }
-export default Admin;
+
+export default Dashboard;

@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, query, getDocs, collection, where, addDoc, QuerySnapshot, } from "firebase/firestore";
+import { getFirestore, collection, addDoc, query, getDocs, where} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-// Initialize Firebase
+// Configuration to initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyB-8Mi0VHXqeJbXeIPIKnevUAID18ooC5s",
   authDomain: "fbdb-833ab.firebaseapp.com",
@@ -12,26 +13,32 @@ const firebaseConfig = {
   appId: "1:247869032312:web:01573f88eb490e69512a8d"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-let originalUser; //variable that keeps the signed in user
-let userInfo = []; //list that keeps all existing users
+const app = initializeApp(firebaseConfig); // initializes Firebase
+const auth = getAuth(app); // gets the Firebase Authentication
+const db = getFirestore(app); // gets Firebase Firestore
+let originalUser; //variable that keeps the signed in user so that when you register an employee it doesn't sign in as them
 
 
 //authentication function to login
 const logInWithEmailAndPassword = async (email, password) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-    originalUser = auth.currentUser;
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const doc = await getDocs(q);
+    const data = doc.docs[0].data();
+    // makes sure only active users are allowed to login
+    if( data.active === true){
+      await signInWithEmailAndPassword(auth, email, password);
+      originalUser = auth.currentUser;
+    }else{
+      alert("Este usuario no existe!")
+    }
   } catch (err) {
     console.error(err);
-    alert(err.message);
   }
 };
 
-//register user function
-const registerWithEmailAndPassword = async (name, email, password, job, lastName, dni) => {
+//register employee function
+const registerWithEmailAndPassword = async (name, email, password, job, lastName, dni, active) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
@@ -42,7 +49,9 @@ const registerWithEmailAndPassword = async (name, email, password, job, lastName
       email,
       job,
       lastName,
-      dni
+      dni,
+      active,
+      userType: "empleado"
     });
     //create same user in database
     await db.collection('users').add({
@@ -51,21 +60,17 @@ const registerWithEmailAndPassword = async (name, email, password, job, lastName
       email: email,
       job: job,
       lastName: lastName,
-      dni: dni
-
+      dni: dni,
+      active: active,
+      userType: "empleado"
     })
     //updates current user so firebase doesn't think you want to sign in as an employee.
     auth.updateCurrentUser(originalUser);
-    console.log(originalUser)
   } catch (err) {
     console.error(err);
-    alert(err.message);
   }
   auth.updateCurrentUser(originalUser);
 };
-
-
-
 
 //logout function
 const logout = () => {

@@ -7,7 +7,8 @@ import {
 } from "react-router-dom";
 //app pages imports
 import HomePage from './pages/HomePage';
-import AdminPage from './pages/AdminPage';
+import DashboardPage from './pages/DashboardPage';
+import EmployeePage from './pages/EmployeePage';
 
 export default function App() {
   return (
@@ -16,7 +17,8 @@ export default function App() {
         <div className="w-full h-full">
         <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/employee" element={<EmployeePage />} />
         </Routes>
         </div>
       </Router>
