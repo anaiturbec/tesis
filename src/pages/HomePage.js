@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from '../components/NavBar';
 import About from '../components/About';
 import SustainabilitySection from '../components/SustainabilitySection';
+import ContactSection from '../components/ContactSection';
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       </div>
       <About />
       <SustainabilitySection />
+      <ContactSection />
     </div>
   );
 }

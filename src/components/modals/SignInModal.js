@@ -61,7 +61,7 @@ export default function SignInModal({isOpen, close}) {
             <label className="block mt-8 font-display md:text-base text-xs text-start">
               <span>Correo Electrónico</span>
               <input
-                className="w-full md:h-8 h-7 border-black border-[1px] bg-white outline-none "
+                className="w-full md:h-10  border-[1px] bg-gray-200 rounded-lg outline-none pl-2"
                 type="text"
                 value={email}
                 onChange={(e) => {
@@ -74,7 +74,7 @@ export default function SignInModal({isOpen, close}) {
             <label className="block md:mb-8 mb-4 md:mt-6 mt-3 font-display md:text-base text-xs">
               <span>Contraseña</span>
               <input
-                className="w-full md:h-8 h-7 border-black border-[1px] bg-white outline-none "
+                className="w-full md:h-10 border-[1px] bg-gray-200 rounded-lg outline-none pl-2"
                 type="password"
                 value={password}
                 onChange={(e) => {
@@ -86,7 +86,7 @@ export default function SignInModal({isOpen, close}) {
             </label>
             <div className="w-full items-center flex flex-col flex-wrap">
               <button
-                className="bg-black rounded-md shadow-xl py-2 w-full mt-10 mb-20 h-10 drop-shadow-3xl font-display md:text-md hover:bg-red-500 items-center justify-center"
+                className="bg-gray-900 rounded-md shadow-xl py-2 w-full mt-10 mb-20 h-10 drop-shadow-3xl font-display md:text-md hover:bg-red-500 items-center justify-center"
                 type="button"
                 onClick={() => logInWithEmailAndPassword(email, password)}
               >
