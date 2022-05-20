@@ -50,7 +50,7 @@ function DataTable() {
   }
   
   return (
-    <div className="w-full flex justify-center mt-20 mb-20">
+    <div className="w-full flex justify-center mt-20 pb-20">
       <div className="w-10/12 flex flex-col rounded-xl drop-shadow-3xl overflow-clip items-center bg-white">
       <div className="w-full h-16 items-center ml-5 mr-5 flex flex-row bg-red-500 mr-13 justify-evenly">
           <div className="w-1/6 flex justify-center">

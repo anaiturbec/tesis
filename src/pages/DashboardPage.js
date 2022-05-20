@@ -42,16 +42,16 @@ function Dashboard() {
   }
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-full bg-gray-900">
       <div className="w-full h-24 flex flex-row justify-center items-center bg-white drop-shadow-3xl">
         <div className="w-11/12 h-24 flex flex-row justify-between items-center">
           <div className="flex flex-row">
-            <p className="text-2xl text-black">Bienvenid@, </p>
+            <p className="text-2xl text-gray-900">Bienvenid@, </p>
             <div className="font-bold text-3xl text-red-500 ml-4">{name}</div>
           </div>
           <div className="flex flex-row gap-x-10">
-            <button className="w-40 h-14 bg-red-500 text-white rounded-2xl drop-shadow-3xl hover:bg-white hover:text-red-500" onClick={()=> setOpenModal(true)}>Crear Empleado</button>
-            <button className="w-40 h-14 bg-white drop-shadow-3xl rounded-2xl flex flex-row items-center justify-center font-semibold hover:text-red-500 text-black" onClick={signOut}>
+            <button className="w-40 h-14 bg-gray-900 text-white rounded-2xl drop-shadow-3xl hover:bg-white hover:text-gray-900" onClick={()=> setOpenModal(true)}>Crear Empleado</button>
+            <button className="w-40 h-14 bg-white drop-shadow-3xl rounded-2xl flex flex-row items-center justify-center font-semibold hover:text-gray-900 text-black" onClick={signOut}>
               <LogoutIcon className="w-7 mr-2" />
               <p>Cerrar Sesión</p>
             </button>
